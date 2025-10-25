@@ -1,5 +1,4 @@
 "use client"
-
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
@@ -14,27 +13,43 @@ const brands = [
   { name: "Louis Vuitton", logo: "/logos/louisvuitton-logo.png" },
 ]
 
-export function BrandsCarousel() {
+export function MarcasCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
-
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % brands.length)
-    }, 3000) // Cambia cada 3 segundos
-
+    }, 3000)
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    if (hoveredIndex !== null) return // No animar si hay hover
+    
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % brands.length)
+    }, 1800)
+    return () => clearInterval(interval)
+  }, [hoveredIndex])
+  
   return (
-    <div className="bg-white border-b border-gray-200 py-6">
+    <div className="bg-white border-b border-gray-200 py-6 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center gap-12 overflow-hidden">
+        <div className="flex items-center justify-center gap-12">
           {/* Versión desktop - muestra todos */}
           <div className="hidden md:flex items-center justify-center gap-12 w-full">
-            {brands.map((brand) => (
+            {brands.map((brand, index) => (
               <div
                 key={brand.name}
-                className="flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                className={`flex-shrink-0 transition-all duration-500 cursor-pointer ${
+                  index === (hoveredIndex !== null ? hoveredIndex : activeIndex)
+                    ? 'grayscale-0 opacity-100 scale-110' 
+                    : 'grayscale opacity-60 scale-100'
+                }`}
               >
                 <div className="relative h-16 w-32">
                   <Image
@@ -47,7 +62,7 @@ export function BrandsCarousel() {
               </div>
             ))}
           </div>
-
+          
           {/* Versión mobile - carousel automático */}
           <div className="md:hidden flex items-center justify-center w-full">
             <div className="relative h-16 w-32">

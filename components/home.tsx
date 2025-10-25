@@ -6,9 +6,10 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
 import { HeroCarousel } from "@/components/hero-carousel"
-import { BrandsCarousel } from "@/components/marcas-carousel"
+import { MarcasCarousel } from "@/components/marcas-carousel"
 import { X } from "lucide-react"
 
+// Asegúrate que NO tenga async aquí
 export function HomeContent() {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [selectedGender, setSelectedGender] = useState<string | null>(null)
@@ -56,8 +57,8 @@ export function HomeContent() {
       />
 
       <main className="flex-1">
-        {!hasActiveFilters && <BrandsCarousel />}
         {!hasActiveFilters && <HeroCarousel />}
+        {!hasActiveFilters && <MarcasCarousel />}
 
         <div className="container mx-auto px-4 py-8">
           <div className={hasActiveFilters ? "flex gap-6" : ""}>
